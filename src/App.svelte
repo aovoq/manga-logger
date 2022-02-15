@@ -1,65 +1,45 @@
 <script>
-  import logo from './assets/svelte.png'
-  import Counter from './lib/Counter.svelte'
+   import { Router, Link, Route } from 'svelte-routing'
+   import { user } from './sessionStore'
+   import { supabase } from './supabaseClient'
+   import Register from './Components/Auth/Register.svelte'
+   import Login from './Components/Auth/Login.svelte'
+   import Dashboard from './Components/Dashboard.svelte'
+
+   user.set(supabase.auth.user())
+
+   supabase.auth.onAuthStateChange((_, session) => {
+      user.set(session.user)
+   })
+
+   const signOut = async () => {
+      try {
+         let { error } = await supabase.auth.signOut()
+         user.set(null)
+         if (error) throw error
+      } catch (error) {
+         console.error(error)
+      }
+   }
 </script>
 
-<main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello world!</h1>
-
-  <Counter />
-
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
-</main>
-
-<style>
-  :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
-  }
-
-  img {
-    height: 16rem;
-    width: 16rem;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
-  }
-</style>
+<Router>
+   <nav>
+      <ul>
+         <li><Link to="/">Home</Link></li>
+         <li><Link to="dashboard">Dashboard</Link></li>
+         <li><Link to="login">Login</Link></li>
+         <li><Link to="register">Register</Link></li>
+         <li><a href="/" on:click|preventDefault={signOut}>Logout</a></li>
+      </ul>
+   </nav>
+   <main>
+      <Route path="login" component={Login} />
+      <Route path="register" component={Register} />
+      <Route path="dashboard" component={Dashboard} />
+      <Route path="/">
+         <h1>Home</h1>
+         <p>To view the protected content, register or login to your account</p>
+      </Route>
+   </main>
+</Router>
