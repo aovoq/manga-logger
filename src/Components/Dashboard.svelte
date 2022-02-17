@@ -1,9 +1,7 @@
 <script>
-   import { user } from './../sessionStore'
+   import Add from './Comic/Add.svelte'
+   import List from './Comic/List.svelte'
 </script>
 
-<h1>Welcome</h1>
-{#if $user}
-   <p>Your email address is {$user.email}</p>
-{/if}
-<p>Your protected content here.</p>
+<Add/>
+<List/>

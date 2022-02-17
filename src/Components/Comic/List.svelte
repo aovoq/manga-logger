@@ -1,6 +1,7 @@
 <script>
-   import { supabase} from '../../supabaseClient'
-   import {user} from '../../sessionStore'
+   import { supabase } from '../../lib/supabaseClient.js'
+   import { user } from '../../lib/sessionStore.js'
+   import Log from './Log.svelte'
 
    let comicLog = []
    const getComicLog = async () => {
@@ -9,9 +10,8 @@
             .from('comic_log')
             .select('*')
             .eq('user_id', $user.id)
-            .order('id', { ascending: false })
+            .order('id', { ascending: true })
 
-         console.log(data)
          if (data) {
             comicLog = data
          }
@@ -22,16 +22,42 @@
       }
    }
 
-   const hoge = () => {
-      console.log(comicLog)
+   const updateLog = async (log) => {
+      try {
+         const {data, error} = await supabase.from('comic_log')
+            .update({title: log.title, desc: log.desc, number: log.number})
+            .eq('id', log.id)
+         if (error) throw error
+         await getComicLog()
+      } catch (error) {
+         console.error(error)
+      }
    }
+
+   const deleteLog = async (log) => {
+      try {
+         const {data, error} = await supabase.from('comic_log')
+            .delete()
+            .eq('id', log.id)
+         await getComicLog()
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
 </script>
 
-<button on:click={hoge}>hoge</button>
+
 <ul use:getComicLog>
    {#each comicLog as log}
-      <li>{log.title}</li>
-      {:else}
-      <p>Not Found</p>
-      {/each}
+      <Log {log} {updateLog} {deleteLog} />
+   {/each}
 </ul>
+
+<style>
+   ul {
+       display: flex;
+       flex-direction: column;
+       gap: 1rem;
+   }
+</style>
