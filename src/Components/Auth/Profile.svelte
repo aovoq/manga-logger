@@ -7,44 +7,19 @@
    let loading = true
    let username = ''
 
-   const getProfile = async () => {
+   const getUsername =  () => {
       try {
          loading = true
-         const user = supabase.auth.user()
-
-         let { data, error, status } = await supabase
-            .from('profiles')
-            .select(`username, website, avatar_url`)
-            .eq('id', user.id)
-            .single()
-
-         if (error && status !== 406) throw error
-
-         if (data) {
-            username = data.username
-         }
-      } catch (error) {
-         console.error(error)
+         username = $user.user_metadata.username
       } finally {
          loading = false
       }
    }
 
-   const updateProfile = async () => {
-      console.log('submit')
+   const updateUsername = async () => {
       try {
          loading = true
-         const user = supabase.auth.user()
-
-         const updates = {
-            id: user.id,
-            username,
-            updated_at: new Date(),
-         }
-
-         let { error } = await supabase.from('profiles')
-         .upsert(updates, {returning: 'minimal'})
-
+         let {user,error} = await supabase.auth.update({data: {username}})
          if (error) throw error
       } catch (error) {
          console.error(error)
@@ -54,7 +29,7 @@
    }
 </script>
 
-<form use:getProfile on:submit|preventDefault={updateProfile}>
+<form use:getUsername on:submit|preventDefault={updateUsername}>
    <div>
       <label for="email">Email : </label>
       <input type="email" id="email" name="email" bind:value={$user.email} disabled>
