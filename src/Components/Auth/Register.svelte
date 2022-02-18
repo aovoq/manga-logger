@@ -2,6 +2,7 @@
    import { supabase } from '../../lib/supabaseClient.js'
    import { Link, navigate } from 'svelte-routing'
 
+   let username = ''
    let email = ''
    let password = ''
    let loading = false
@@ -9,7 +10,7 @@
    const handleRegister = async () => {
       try {
          loading = true
-         const { error } = await supabase.auth.signUp({ email, password, })
+         const { error } = await supabase.auth.signUp({ email, password, }, {data: {username}})
          if (error) throw error
          await navigate('/dashboard')
       } catch (error) {
@@ -32,6 +33,10 @@
       <h2>Create your Account! </h2>
    </div>
    <form class="wrapper" on:submit|preventDefault={handleRegister}>
+      <div class="input-box">
+         <label for="username">UserName</label>
+         <input type="text" name="username" id="username" bind:value={username} required/>
+      </div>
       <div class="input-box">
          <label for="email">Email</label>
          <input type="email" name="email" id="email" bind:value={email} autocomplete="off" required/>
