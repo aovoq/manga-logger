@@ -27,20 +27,6 @@
 </svelte:head>
 
 <Router>
-   {#if $user}
-      <nav>
-         <ul>
-            <li><a href="/" on:click|preventDefault={signOut}>Logout</a></li>
-            <li>
-               <Link to="dashboard">Dashboard</Link>
-            </li>
-            <li>
-               <Link to="profile">Profile</Link>
-            </li>
-         </ul>
-      </nav>
-   {/if}
-
    <main>
       {#if $user}
          <Route path="dashboard" component={Dashboard}/>
