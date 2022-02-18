@@ -79,7 +79,7 @@
 
     .wrapper {
         height: 450px;
-        gap: 6rem;
+        gap: 3rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
