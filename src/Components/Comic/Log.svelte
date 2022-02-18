@@ -1,5 +1,5 @@
 <script>
-   export let log, deleteLog, updateLog
+   export let log
 </script>
 
 <li>
@@ -27,28 +27,13 @@
       </div>
 
    </div>
-
-
-   <!--   <input type="text" value={log.title} on:input={(e) => {-->
-   <!--      log.title = e.currentTarget.value-->
-   <!--      updateLog(log)-->
-   <!--   }}>-->
-   <!--   <input type="text" value={log.desc} on:input={(e) => {-->
-   <!--      log.desc = e.currentTarget.value-->
-   <!--      updateLog(log)-->
-   <!--   }}>-->
-   <!--   <input type="text" value={log.number} on:input={(e) => {-->
-   <!--      log.number = e.currentTarget.value-->
-   <!--      updateLog(log)-->
-   <!--   }}>-->
-   <!--   <button on:click={() => deleteLog(log)}>Delete</button>-->
 </li>
 
 <style>
     li {
         list-style: none;
         background: #fff;
-        padding: 1.3rem;
+        padding: 1.8rem 2rem;
     }
 
     .upper {
